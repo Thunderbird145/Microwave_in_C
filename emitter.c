@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-enum op {SYNCH, EMIT, TIME, RUN};
+enum op {SYNCH, DOOR, LIGHT, EMIT, KEYPAD, RUN, COOKTIME};
 
 main() {
 	key_t key;
@@ -25,18 +25,18 @@ main() {
 
 	printf("emitter application started.\n");
 	while(1) {
-		if (*(shm+RUN) == 1 && *(shm+DOOR) == 0 && *(shm+TIME) > 0) {
-         *(shm+EMIT) = 1;
-         if (os == 0) {
-            os = 1;
-            printf("Emitter is on.");
-         }
-      } else {
-         *(shm+EMIT) = 0;
-         if (os == 1) {
-            os = 0;
-            printf("Emitter is off.");
-         }
-      }
+		if (*(shm+RUN) == 1 && *(shm+DOOR) == 0) {
+         		*(shm+EMIT) = 1;
+         		if (os == 0) {
+            			os = 1;
+            			printf("Emitter is on.");
+         		}
+      		} else {
+         		*(shm+EMIT) = 0;
+         		if (os == 1) {
+            			os = 0;
+            			printf("Emitter is off.");
+         		}
+      		}
 	}
 }
