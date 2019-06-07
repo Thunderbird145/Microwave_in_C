@@ -46,6 +46,9 @@ int main() {
         if(option == 3) {
 		*(shm+RUN) = 0;
         }
+	if (!(option == 1 || option == 2 || option == 3 || option == 0)) {
+		option = 0;
+	}
     }
     printf(":POWERING OFF: \n");
 }//end main

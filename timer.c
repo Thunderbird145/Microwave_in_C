@@ -8,7 +8,6 @@
 
 enum op {SYNCH, DOOR, LIGHT, EMIT, KEYPAD, RUN, TIME};
 
-void stopTimer();
 int *shm;
 int shm_id;
 
@@ -24,12 +23,8 @@ int main() {
 
 	while(1) {
 		while(*(shm+RUN) == 1 && *(shm+TIME) > 0) {
-			printf("running microwave \n");
+			printf("");
 			if(*(shm+DOOR) == 0) { // door is closed
-
-				*(shm+EMIT) = 1;
-				*(shm+LIGHT) = 1;
-				
 				printf("Time: %d \n", *(shm+TIME));
 				sleep(1);
 				*(shm+TIME) = *(shm+TIME) - 1;
@@ -38,7 +33,8 @@ int main() {
 					printf("cooking done. \n");
 				}
 			} else {
-				printf("WARNING: DOOR IS OPEN.");
+				printf("WARNING: DOOR IS OPEN. \n");
+				*(shm+RUN) = 0;
 			}
 		}
 	}

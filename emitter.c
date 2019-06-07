@@ -26,16 +26,14 @@ main() {
 	printf("emitter application started.\n");
 	while(1) {
 		if (*(shm+RUN) == 1 && *(shm+DOOR) == 0) {
-         		*(shm+EMIT) = 1;
-         		if (os == 0) {
-            			os = 1;
-            			printf("Emitter is on.");
+         		if (*(shm+EMIT) == 0) {
+            			*(shm+EMIT) = 1;
+            			printf("Emitter is on.\n");
          		}
       		} else {
-         		*(shm+EMIT) = 0;
-         		if (os == 1) {
-            			os = 0;
-            			printf("Emitter is off.");
+         		if (*(shm+EMIT) == 1) {
+            			*(shm+EMIT) = 0;
+            			printf("Emitter is off.\n");
          		}
       		}
 	}

@@ -25,22 +25,15 @@ main() {
 
 	printf("door application started.\n");
 	while(1) {
-		printf("", );
-		scanf("%d", &oc);
-		if(oc == 1) {
+		if(*(shm + DOOR) == 0) {
 			*(shm + DOOR) = 1;
-			*(shm + RUN) = 0;
-			printf("door is open, press 0 to close.\n");
-			
+			printf("door opened\n");
+			printf("Press enter to close the door.\n");	
+		} else {
+			*(shm+DOOR) = 0;
+			printf("door closed\n");
+			printf("Press enter to open the door.\n");	
 		}
-		if(oc == 0) {
-			*(shm + DOOR) = 0;
-			printf("door closed. ");
-			if(shm[COOKTIME] > 0) {
-				*(shm + RUN) = 1;
-			}
-			printf("resuming...\n");
-		}
-		
+		getchar();	
 	}
 }

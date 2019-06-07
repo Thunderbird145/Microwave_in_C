@@ -8,31 +8,35 @@ enum op {SYNCH, DOOR, LIGHT, EMIT, KEYPAD, RUN, TIME};
 
 int main()
 {
-    int shmid;
-    int SHMSZ = sizeof(int)*10;
-    key_t key = 0x520260a;
-    char *shm, *s;
+    key_t key;
+	int shm_id;
+	int *shm;
+	int emitstat;
+	int os = 0;
+	
+	key=0x520260A;
+	//key = ftok("/home/kosuke/IPU", 'a' );
+	printf("key= %x\n", key);
+	shm_id = shmget(key, sizeof(int)*10, 0666);
+	
+	printf(" shm_id = %d\n", shm_id);
+	shm = shmat(shm_id,0,0);
+	printf("waiting for GO.\n");
+	while ( *(shm+SYNCH) == 0 );
 
-    if((shmid = shmget(key, SHMSZ, 0666)) < 0) {
-        perror("shmget didn't work");
-        exit(1);
-    }
-
-    shm = shmat(shmid, 0, 0);
-	int flag = 0;
+	printf("light application started.\n");
+	printf("%d\n", *(shm+LIGHT));	
 	while(1) {
-		if (*(shm+DOOR) == 1 && flag == 0){
-			printf("Light is ON \n");
-			flag = 1;
-		}
-		if (*(shm+DOOR) == 0 && *(shm+RUN) == 1 && flag == 0){
-			printf("Light is ON \n");
-			//flag = 0;
-		}
-		else if(shm[DOOR] == 0 && shm[RUN] == 0 && flag == 1)
-		{
-			printf("Light is OFF \n");
-			flag = 0;
-		}
+		if (*(shm+EMIT) == 1 || *(shm+DOOR) == 1) {
+         		if (*(shm+LIGHT) == 0) {
+            			*(shm+LIGHT) = 1;
+            			printf("Light is on.\n");
+         		}
+      		} else {
+         		if (*(shm+LIGHT) == 1) {
+            			*(shm+LIGHT) = 0;
+            			printf("Light is off.\n");
+         		}
+      		}
 	}
 }
